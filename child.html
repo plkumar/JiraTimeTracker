@@ -1,0 +1,20 @@
+<html>
+
+<head></head>
+
+<body>
+    <h1>Child window</h1>
+
+    <input type="button" id="close-child" value="Close">
+</body>
+<script type="text/javascript">
+    const ipc = require('electron').ipcRenderer
+
+    const trayBtn = document.getElementById('close-child')
+
+    trayBtn.addEventListener('click', function(event) {
+        ipc.send('close-child-window')
+    })
+</script>
+
+</html>
