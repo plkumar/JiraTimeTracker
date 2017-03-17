@@ -17,11 +17,15 @@ function onClosed() {
 
 function createMainWindow() {
     const win = new BrowserWindow({
-        width: 600,
-        height: 400
+        width: 900,
+        height: 700,
+        //devTools: true
     });
 
     win.loadURL(`file://${__dirname}/index.html`);
+
+    win.webContents.openDevTools()
+
     win.on('closed', onClosed);
 
     return win;
