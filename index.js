@@ -43,45 +43,49 @@ ipcMain.on('close-child-window', function(event) {
 function createAppIcon(event) {
     const iconName = process.platform === 'win32' ? 'jira-icon.png' : 'iconTemplate.png'
     const iconPath = path.join(__dirname, iconName)
-    appIcon = new Tray(iconPath)
 
-    const contextMenu = Menu.buildFromTemplate([{
-            label: 'Remove',
-            click: function() {
-                if (event) {
-                    event.sender.send('tray-removed')
-                }
-                appIcon.destroy()
-            }
-        },
-        {
-            label: 'Exit',
-            click: function() {
-                if (mainWindow) {
-                    mainWindow.close();
-                }
+    if (!appIcon) {
 
-                if (appIcon) {
+        appIcon = new Tray(iconPath)
+
+        const contextMenu = Menu.buildFromTemplate([{
+                label: 'Remove',
+                click: function() {
+                    if (event) {
+                        event.sender.send('tray-removed')
+                    }
                     appIcon.destroy()
                 }
-                app.quit();
+            },
+            {
+                label: 'Exit',
+                click: function() {
+                    if (mainWindow) {
+                        mainWindow.close();
+                    }
+
+                    if (appIcon) {
+                        appIcon.destroy()
+                    }
+                    app.quit();
+                }
             }
-        }
-    ]);
+        ]);
 
-    appIcon.setToolTip('JIRA Time Tracker.')
-    appIcon.setContextMenu(contextMenu)
+        appIcon.setToolTip('JIRA Time Tracker.')
+        appIcon.setContextMenu(contextMenu)
 
-    appIcon.on('click', (appIconEvent, bounds) => {
-        console.log(bounds);
-        if (!childFrame) {
-            console.log("Creating child window.")
-            childFrame = new BrowserWindow({ width: 200, height: 300, frame: false, x: bounds.x, y: bounds.y - 300 })
-            childFrame.on('close', function() { childFrame = null })
-            childFrame.loadURL(`file://${__dirname}/child.html`)
-        }
-        childFrame.show()
-    });
+        appIcon.on('click', (appIconEvent, bounds) => {
+            console.log(bounds);
+            if (!childFrame) {
+                console.log("Creating child window.")
+                childFrame = new BrowserWindow({ width: 200, height: 300, frame: false, x: bounds.x, y: bounds.y - 300 })
+                childFrame.on('close', function() { childFrame = null })
+                childFrame.loadURL(`file://${__dirname}/child.html`)
+            }
+            childFrame.show()
+        });
+    }
 }
 
 ipcMain.on('put-in-tray', function(event) {
