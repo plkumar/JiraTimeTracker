@@ -41,7 +41,7 @@ ipcMain.on('close-child-window', function(event) {
 })
 
 function createAppIcon(event) {
-    const iconName = process.platform === 'win32' ? 'jira-icon.png' : 'trayIcon.png'
+    const iconName = process.platform === 'win32' ? 'icon32.png' : 'trayIcon.png'
     const iconPath = path.join(__dirname, iconName)
     appIcon = new Tray(iconPath)
 
